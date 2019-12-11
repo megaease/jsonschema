@@ -334,6 +334,21 @@ func (t *Type) structKeywordsFromTags(f reflect.StructField) {
 	case "array":
 		t.arrayKeywords(tags)
 	}
+
+	t.attachCustomizedFormat(tags)
+}
+
+func (t *Type) attachCustomizedFormat(tags []string) {
+	for _, tag := range tags {
+		nameValue := strings.Split(tag, "=")
+		if len(nameValue) == 2 {
+			name, val := nameValue[0], nameValue[1]
+			if name == "format" {
+				t.Format = val
+				return
+			}
+		}
+	}
 }
 
 // read struct tags for generic keyworks
