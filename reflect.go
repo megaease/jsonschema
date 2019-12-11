@@ -491,11 +491,12 @@ func requiredFromJSONSchemaTags(tags []string) bool {
 		return false
 	}
 	for _, tag := range tags {
-		if tag == "required" {
-			return true
+		if tag == "omitempty" {
+			return false
 		}
 	}
-	return false
+	// NOTICE: true by default
+	return true
 }
 
 func ignoredByJSONTags(tags []string) bool {
