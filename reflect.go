@@ -392,6 +392,8 @@ func (t *Type) stringKeywords(tags []string) {
 				t.Default = val
 			case "example":
 				t.Examples = append(t.Examples, val)
+			case "enum":
+				t.Enum = append(t.Enum, val)
 			}
 		}
 	}
@@ -425,6 +427,10 @@ func (t *Type) numbericKeywords(tags []string) {
 			case "example":
 				if i, err := strconv.Atoi(val); err == nil {
 					t.Examples = append(t.Examples, i)
+				}
+			case "enum":
+				if i, err := strconv.Atoi(val); err == nil {
+					t.Enum = append(t.Enum, i)
 				}
 			}
 		}
