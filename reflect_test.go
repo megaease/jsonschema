@@ -82,6 +82,13 @@ type CustomTypeField struct {
 	CreatedAt CustomTime
 }
 
+type TestEnum struct {
+	Name      string      `json:"name" jsonschema:"required,enum=john,enum=landy,enum=king,enum=john"`
+	Age       int         `json:"age" jsonschema:"omitempty,enum=10,enum=20,enum=30,enum=30"`
+	Hello     interface{} `json:"hello" jsonschema_enum:"[\"a\",\"b\",\"b\",2,2,null]"`
+	EmptyTest string      `json:"emptyTest" jsonschema:"emum="`
+}
+
 func TestSchemaGeneration(t *testing.T) {
 	tests := []struct {
 		typ       interface{}
@@ -104,6 +111,7 @@ func TestSchemaGeneration(t *testing.T) {
 				return nil
 			},
 		}, "fixtures/custom_type.json"},
+		{&TestEnum{}, &Reflector{RequiredFromJSONSchemaTags: true}, "fixtures/enum.json"},
 	}
 
 	for _, tt := range tests {

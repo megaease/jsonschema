@@ -322,6 +322,7 @@ func (r *Reflector) reflectStructFields(st *Type, definitions Definitions, t ref
 
 func (t *Type) structKeywordsFromTags(f reflect.StructField) {
 	t.Description = f.Tag.Get("jsonschema_description")
+	t.extendJSONSchemaTags(&f)
 	tags := strings.Split(f.Tag.Get("jsonschema"), ",")
 	t.genericKeywords(tags)
 	switch t.Type {
@@ -336,6 +337,17 @@ func (t *Type) structKeywordsFromTags(f reflect.StructField) {
 	}
 
 	t.attachCustomizedFormat(tags)
+}
+
+func (t *Type) extendJSONSchemaTags(f *reflect.StructField) {
+	if extendEnum := f.Tag.Get("jsonschema_enum"); len(extendEnum) > 0 {
+		var arr []interface{}
+		if err := json.Unmarshal([]byte(extendEnum), &arr); err == nil {
+			for _, item := range arr {
+				t.Enum = appendUnique(t.Enum, item)
+			}
+		}
+	}
 }
 
 func (t *Type) attachCustomizedFormat(tags []string) {
@@ -367,6 +379,15 @@ func (t *Type) genericKeywords(tags []string) {
 	}
 }
 
+func appendUnique(arr []interface{}, elem interface{}) []interface{} {
+	for _, o := range arr {
+		if o == elem {
+			return arr
+		}
+	}
+	return append(arr, elem)
+}
+
 // read struct tags for string type keyworks
 func (t *Type) stringKeywords(tags []string) {
 	for _, tag := range tags {
@@ -391,9 +412,9 @@ func (t *Type) stringKeywords(tags []string) {
 			case "default":
 				t.Default = val
 			case "example":
-				t.Examples = append(t.Examples, val)
+				t.Examples = appendUnique(t.Examples, val)
 			case "enum":
-				t.Enum = append(t.Enum, val)
+				t.Enum = appendUnique(t.Enum, val)
 			}
 		}
 	}
@@ -426,11 +447,11 @@ func (t *Type) numbericKeywords(tags []string) {
 				t.Default = i
 			case "example":
 				if i, err := strconv.Atoi(val); err == nil {
-					t.Examples = append(t.Examples, i)
+					t.Examples = appendUnique(t.Examples, i)
 				}
 			case "enum":
 				if i, err := strconv.Atoi(val); err == nil {
-					t.Enum = append(t.Enum, i)
+					t.Enum = appendUnique(t.Enum, i)
 				}
 			}
 		}
