@@ -19,15 +19,15 @@ type GrandfatherType struct {
 }
 
 type SomeBaseType struct {
-	SomeBaseProperty     int `json:"some_base_property"`
-	SomeBasePropertyYaml int `yaml:"some_base_property_yaml"`
+	SomeBaseProperty     int `json:"some_base_property" jsonschema:"omitempty"`
+	SomeBasePropertyYaml int `yaml:"some_base_property_yaml"  jsonschema:"omitempty"`
 	// The jsonschema required tag is nonsensical for private and ignored properties.
 	// Their presence here tests that the fields *will not* be required in the output
 	// schema, even if they are tagged required.
 	somePrivateBaseProperty   string          `json:"i_am_private" jsonschema:"required"`
 	SomeIgnoredBaseProperty   string          `json:"-" jsonschema:"required"`
 	SomeSchemaIgnoredProperty string          `jsonschema:"-,required"`
-	Grandfather               GrandfatherType `json:"grand"`
+	Grandfather               GrandfatherType `json:"grand"  jsonschema:"omitempty"`
 
 	SomeUntaggedBaseProperty           bool `jsonschema:"required"`
 	someUnexportedUntaggedBaseProperty bool
@@ -36,7 +36,7 @@ type SomeBaseType struct {
 type MapType map[string]interface{}
 
 type nonExported struct {
-	PublicNonExported  int
+	PublicNonExported  int `jsonschema:"omitempty"`
 	privateNonExported int
 }
 
@@ -56,24 +56,24 @@ type TestUser struct {
 
 	ID      int                    `json:"id" jsonschema:"required"`
 	Name    string                 `json:"name" jsonschema:"required,minLength=1,maxLength=20,pattern=.*,description=this is a property,title=the name,example=joe,example=lucy,default=alex"`
-	Friends []int                  `json:"friends,omitempty" jsonschema_description:"list of IDs, omitted when empty"`
-	Tags    map[string]interface{} `json:"tags,omitempty"`
+	Friends []int                  `json:"friends,omitempty" jsonschema:"omitempty" jsonschema_description:"list of IDs, omitted when empty"`
+	Tags    map[string]interface{} `json:"tags,omitempty"  jsonschema:"omitempty"`
 
-	TestFlag       bool
-	IgnoredCounter int `json:"-"`
+	TestFlag       bool `jsonschema:"omitempty"`
+	IgnoredCounter int  `json:"-"`
 
 	// Tests for RFC draft-wright-json-schema-validation-00, section 7.3
-	BirthDate time.Time `json:"birth_date,omitempty"`
-	Website   url.URL   `json:"website,omitempty"`
-	IPAddress net.IP    `json:"network_address,omitempty"`
+	BirthDate time.Time `json:"birth_date,omitempty" jsonschema:"omitempty"`
+	Website   url.URL   `json:"website,omitempty" jsonschema:"omitempty"`
+	IPAddress net.IP    `json:"network_address,omitempty" jsonschema:"omitempty"`
 
 	// Tests for RFC draft-wright-json-schema-hyperschema-00, section 4
 	Photo []byte `json:"photo,omitempty" jsonschema:"required"`
 
 	// Tests for jsonpb enum support
-	Feeling ProtoEnum `json:"feeling,omitempty"`
-	Age     int       `json:"age" jsonschema:"minimum=18,maximum=120,exclusiveMaximum=true,exclusiveMinimum=true"`
-	Email   string    `json:"email" jsonschema:"format=email"`
+	Feeling ProtoEnum `json:"feeling,omitempty" jsonschema:"omitempty"`
+	Age     int       `json:"age" jsonschema:"omitempty,minimum=18,maximum=120,exclusiveMaximum=true,exclusiveMinimum=true"`
+	Email   string    `json:"email" jsonschema:"omitempty,format=email"`
 }
 
 type CustomTime time.Time
