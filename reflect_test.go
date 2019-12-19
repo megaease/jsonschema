@@ -112,6 +112,7 @@ func TestSchemaGeneration(t *testing.T) {
 			},
 		}, "fixtures/custom_type.json"},
 		{&TestEnum{}, &Reflector{RequiredFromJSONSchemaTags: true}, "fixtures/enum.json"},
+		{&TestEnum{}, &Reflector{RequiredFromJSONSchemaTags: true, DefinitionNameWithPackage: true}, "fixtures/enum_definition_with_package.json"},
 	}
 
 	for _, tt := range tests {
