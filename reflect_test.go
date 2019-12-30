@@ -89,6 +89,13 @@ type TestEnum struct {
 	EmptyTest string      `json:"emptyTest" jsonschema:"emum="`
 }
 
+type TestObject struct {
+	Tags1      map[string]interface{} `json:"tags1,omitempty" jsonschema:"omitempty"`
+	Tags2      map[string]interface{} `json:"tags2,omitempty" jsonschema:"omitempty,additionalProperties=true"`
+	OtherTags1 map[string]string      `json:"otherTags1,omitempty" jsonschema:"omitempty"`
+	OtherTags2 map[string]string      `json:"otherTags2,omitempty" jsonschema:"omitempty,additionalProperties=true"`
+}
+
 func TestSchemaGeneration(t *testing.T) {
 	tests := []struct {
 		typ       interface{}
@@ -113,6 +120,7 @@ func TestSchemaGeneration(t *testing.T) {
 		}, "fixtures/custom_type.json"},
 		{&TestEnum{}, &Reflector{RequiredFromJSONSchemaTags: true}, "fixtures/enum.json"},
 		{&TestEnum{}, &Reflector{RequiredFromJSONSchemaTags: true, DefinitionNameWithPackage: true}, "fixtures/enum_definition_with_package.json"},
+		{&TestObject{}, &Reflector{RequiredFromJSONSchemaTags: true}, "fixtures/map_object.json"},
 	}
 
 	for _, tt := range tests {

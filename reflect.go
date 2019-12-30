@@ -344,6 +344,8 @@ func (t *Type) structKeywordsFromTags(f reflect.StructField) {
 		t.numbericKeywords(tags)
 	case "array":
 		t.arrayKeywords(tags)
+	case "object":
+		t.objectKeywords(tags)
 	}
 
 	t.attachCustomizedFormat(tags)
@@ -469,20 +471,22 @@ func (t *Type) numbericKeywords(tags []string) {
 }
 
 // read struct tags for object type keyworks
-// func (t *Type) objectKeywords(tags []string) {
-//     for _, tag := range tags{
-//         nameValue := strings.Split(tag, "=")
-//         name, val := nameValue[0], nameValue[1]
-//         switch name{
-//             case "dependencies":
-//                 t.Dependencies = val
-//                 break;
-//             case "patternProperties":
-//                 t.PatternProperties = val
-//                 break;
-//         }
-//     }
-// }
+func (t *Type) objectKeywords(tags []string) {
+	for _, tag := range tags {
+		nameValue := strings.Split(tag, "=")
+		if len(nameValue) == 2 {
+			name, val := nameValue[0], nameValue[1]
+			switch name {
+			case "additionalProperties":
+				t.AdditionalProperties = []byte(val)
+				break
+				// case "patternProperties":
+				// 	t.PatternProperties = val
+				// 	break
+			}
+		}
+	}
+}
 
 // read struct tags for array type keyworks
 func (t *Type) arrayKeywords(tags []string) {

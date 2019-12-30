@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/TestObject",
+  "definitions": {
+    "TestObject": {
+      "properties": {
+        "otherTags1": {
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "otherTags2": {
+          "additionalProperties": true,
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "tags1": {
+          "patternProperties": {
+            ".*": {
+              "additionalProperties": true,
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "tags2": {
+          "additionalProperties": true,
+          "patternProperties": {
+            ".*": {
+              "additionalProperties": true,
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}
